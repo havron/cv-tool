@@ -245,19 +245,13 @@ anchorcolor=darkblue,citecolor=darkblue}
           \newlength{\rcollength}\setlength{\rcollength}{1.4in}%
           %
           \begin{tabu} to 1.0\textwidth {X[l]X[r]}
-            $basics.institution$ & $basics.phone$ \\
-            $basics.department$ & \email{$basics.email$}\\
+            $basics.institution$ & Phone (Signal): $basics.phone$ \\
+            $basics.department$ & Email: \email{$basics.email$}\\
             $for(basics.location.address)$
-            $basics.location.address$ &  \\
+            $basics.location.address$ & Web: \href{$basics.personalSite$}{\nolinkurl{$basics.personalSite$}}
+  \\
             $endfor$
             $basics.location.city$, $basics.location.state$ $basics.location.postalCode$\\
-            $if(basics.personalSite)$
-            \href{$basics.personalSite$}{\nolinkurl{$basics.personalSite$}}
-            (\emph{web})
-            $endif$ & 
-            $if(basics.pgpKey)$
-            \href{$basics.pgpKey$}{\nolinkurl{$basics.pgpKey$}} (\emph{pgp, e2e})
-            $endif$ \\
           \end{tabu}
 
           $if(basics.objective)$
@@ -296,12 +290,26 @@ anchorcolor=darkblue,citecolor=darkblue}
           \end{innerlist}
           $sep$\bigskip$endfor$
 
+          $if(awards)$
+          \section{Academic Awards}
+          $for(awards)$
+          \textbf{$awards.awardName$} \hfill \textit{$awards.awarder$},
+          $awards.dateAwarded$
+          $if(awards.awardSummary)$
+          \begin{innerlist}
+          \item[]$awards.awardSummary$
+          \end{innerlist}
+          $endif$
+          $sep$\bigskip$endfor$
+          $endif$
+
+
           $if(publications)$
-          \section{Publications}
+          \section{Refereed Publications}
           $for(publications.contents)$
-          \textbf{$publications.contents.publicationTitle$.}
+          \textbf{$publications.contents.publicationTitle$}\\
           \emph{$publications.contents.publicationVenue$}
-          ($publications.contents.publicationYear$)
+          $publications.contents.publicationYear$
           \begin{innerlist}
           \item[]$for(publications.contents.authors)$
             $publications.contents.authors$$sep$,
@@ -316,20 +324,8 @@ anchorcolor=darkblue,citecolor=darkblue}
           $sep$\bigskip$endfor$
           $endif$
 
-          $if(awards)$
-          \section{Awards}
-          $for(awards)$
-          \textbf{$awards.awardName$} \hfill \textit{$awards.awarder$}, $awards.dateAwarded$
-          $if(awards.awardSummary)$
-          \begin{innerlist}
-          \item[]$awards.awardSummary$
-          \end{innerlist}
-          $endif$
-          $sep$\bigskip$endfor$
-          $endif$
-
           $if(presentations)$
-          \section{Presentations}
+          \section{Invited Talks}
           $for(presentations.contents)$
           $presentations.contents.presenters$:
           ``$presentations.contents.presentationTitle$.''
@@ -346,7 +342,20 @@ anchorcolor=darkblue,citecolor=darkblue}
           $sep$\bigskip$endfor$
           $endif$
 
+          $if(press)$
+          \section{Select Press Coverage}
+          Titles are clickable. Full list is available at:
+          \url{https://havron.dev/media}
+          \vskip 0.5cm
+          $for(press.contents)$
+          \begin{innerlist}
+          \item[]\href{$press.contents.pressLink$}{``$press.contents.pressTitle$''}\\ \emph{$press.contents.pressVenue$} ($press.contents.pressDate$)
+          \end{innerlist}
+          $sep$\bigskip$endfor$
+          $endif$
+
           $if(research)$
+
           \section{Research Experience}
           $for(research)$
           \textbf{$research.researchName$} \hfill {$research.researchWhen$}
@@ -408,9 +417,10 @@ anchorcolor=darkblue,citecolor=darkblue}
           $endif$
 
           $if(volunteering)$
-          \section{Volunteering}
+          \section{Department and Community Service}
           $for(volunteering)$
-          \textbf{$volunteering.company$}\hfill $volunteering.startDate$ - $volunteering.endDate$\\
+          \textbf{$volunteering.company$}\hfill $volunteering.startDate$
+          $if(volunteering.endDate)$- $volunteering.endDate$ $endif$\\
           $volunteering.workSummary$
           $if(volunteering.companyWebsite)$\\\url{$volunteering.companyWebsite$}$endif$
           $if(volunteering.highlights)$

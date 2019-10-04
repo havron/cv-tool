@@ -175,6 +175,22 @@ data CVTeaching = CVTeaching {
 instance FromJSON CVTeaching
 instance ToJSON CVTeaching
 
+data CVPress = CVPress {
+  pressTitle :: String,
+  pressDate :: String,
+  pressLink :: Maybe String,
+  pressVenue :: String
+}
+  deriving (Generic)
+instance FromJSON CVPress
+instance ToJSON CVPress
+
+data CVPresses = CVPressFile FilePath | CVPressList [CVPress]
+  deriving (Generic)
+instance FromJSON CVPresses where
+  parseJSON v = (CVPressList <$> withArray "List" (mapM parseJSON . V.toList ) v) <|> (CVPressFile <$> withText "String" (return . unpack) v)
+instance ToJSON CVPresses
+
 data CVLanguage = CVLanguage {
   language :: String,
   fluency :: Maybe String
@@ -207,6 +223,7 @@ data CVData = CVData {
   research :: Maybe [CVResearch],
   teaching :: Maybe [CVTeaching],
   presentations :: Maybe CVPresentations,
+  press :: Maybe CVPresses,
   skills :: Maybe [CVSkill],
   languages :: Maybe [CVLanguage],
   interests :: Maybe [CVInterest],
